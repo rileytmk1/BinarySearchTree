@@ -5,19 +5,20 @@
 
 using namespace std;
 
+//node struct for binary search tree
 struct Node{
   int value;
   Node* left;
   Node* right;
 };
 
-void add (Node* node, int data);
-void print(Node* root);
-
+void add (Node* &root, int data);
+void print(Node*& root, int depth);
+void remove(Node* &root, int r);
 
 int main()
 {
-  Node* root = new Node();
+  Node* root = NULL;
   char input[20];
   while (strcmp(input, "QUIT") != 0){
     cout << "ADD, DELETE, PRINT, or SEARCH: ";
@@ -33,11 +34,14 @@ int main()
 	cout << "How many numbers do you want to add? ";
 	cin >> n;
 	cin.ignore();
-	/*
 	for (int i = 0; i < n; i++){
-	  
+	  int n2;
+	  cout << "Enter Numbber: ";
+	  cin >> n2;
+	  cin.ignore();
+	  add(root, n2);
 	}
-	*/
+	
       }
       if (strcmp(input2, "file") == 0) {
 	ifstream inputFile("nums.txt");
@@ -50,7 +54,15 @@ int main()
       }
     }
     else if (strcmp(input, "PRINT") == 0){
-      cout << root->value << endl;
+      print(root, 0);
+    }
+
+    else if (strcmp(input, "DELETE") == 0){
+      cout << "What number do you want to delete? ";
+      int n3;
+      cin >> n3;
+      cin.ignore();
+      remove(root, n3);
     }
   }
 
@@ -58,27 +70,69 @@ int main()
 }
 
 
-void add(Node* node, int data)
+void add(Node* &root, int data)
 {
-  Node* newNode = new Node();
-  newNode->value = data;
-  if (node == NULL){
-    node = newNode;
-    cout << node->value << endl;
+  if (root == NULL){
+    root = new Node();
+    root->value = data;
+    root->left = NULL;
+    root->right = NULL;
     return;
   }
-  else if (data <= node->value){
-    add(node->left, data);
+  if (data < root->value){
+    add(root->left, data);
   }
-  else if (data > node->value){
-    add(node->right, data);
+  else{
+    add(root->right, data);
   }
   
 }
 
-/*
-void print(Node* root)
+void remove(Node* &root, int r)
 {
-  cout << root->value << endl;
+  if (root == NULL){
+    cout << "Number not found!" << endl;
+  }
+  else if (root->value == r){
+    if (root->left == NULL && root->right == NULL){
+      delete root;
+      root = NULL;
+    }
+    if (root->left != NULL && root->right == NULL){
+      Node* temp = root->left;
+      delete root;
+      root = temp;
+    }
+    if (root->left == NULL && root->right != NULL){
+      Node* temp = root->right;
+      delete root;
+      root = temp;
+    }
+  }
+  else{
+    if (r < root->value){
+      remove(root->left, r);
+    }
+    else{
+      remove(root->right, r);
+    }
+  }
 }
-*/
+
+
+void print(Node*& root, int depth = 0)
+{
+  if (root == NULL){
+    return;
+  }
+  print(root->right, depth+1);
+
+  for (int i = 0; i < depth; i++){
+    cout << "   ";
+  }
+
+  cout << root->value << endl;
+
+  print(root->left, depth+1);
+}
+
