@@ -15,6 +15,7 @@ struct Node{
 void add (Node* &root, int data);
 void print(Node*& root, int depth);
 void remove(Node* &root, int r);
+void search(Node* &root, int num);
 
 int main()
 {
@@ -64,6 +65,14 @@ int main()
       cin.ignore();
       remove(root, n3);
     }
+
+    else if (strcmp(input, "SEARCH") == 0 ){
+      int num;
+      cout << "What number do you want to search for? ";
+      cin >> num;
+      cin.ignore();
+      search(root, num);
+    }
   }
 
   
@@ -108,6 +117,14 @@ void remove(Node* &root, int r)
       delete root;
       root = temp;
     }
+    else{
+      if (root->right->left == NULL){
+	Node* temp = root->right->right;
+	root = root->right;
+	delete root->right;
+	root->right = temp;
+      }
+    }
   }
   else{
     if (r < root->value){
@@ -134,5 +151,24 @@ void print(Node*& root, int depth = 0)
   cout << root->value << endl;
 
   print(root->left, depth+1);
+}
+
+void search(Node*& root, int num)
+{
+  if (root == NULL){
+    cout << "Number not found." << endl;
+    return;
+  }
+  if (root->value == num){
+    cout << "Value found! Number: " << num << " is in the tree." << endl;
+    return;
+  }
+  else if (num > root->value){
+    search(root->right, num);
+  }
+  else{
+    search(root->right, num);
+  }
+
 }
 
