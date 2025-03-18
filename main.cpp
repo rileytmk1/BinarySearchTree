@@ -167,7 +167,7 @@ void search(Node*& root, int num)
     search(root->right, num);
   }
   else{
-    search(root->right, num);
+    search(root->left, num);
   }
 
 }
