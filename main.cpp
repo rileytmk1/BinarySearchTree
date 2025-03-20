@@ -101,29 +101,30 @@ void remove(Node* &root, int r)
 {
   if (root == NULL){
     cout << "Number not found!" << endl;
+    return;
   }
   else if (root->value == r){
     if (root->left == NULL && root->right == NULL){
       delete root;
       root = NULL;
     }
-    if (root->left != NULL && root->right == NULL){
-      Node* temp = root->left;
-      delete root;
-      root = temp;
+    else if (root->left != NULL && root->right == NULL){
+      Node* temp = root;
+      root = root->left;
+      delete temp;
     }
-    if (root->left == NULL && root->right != NULL){
-      Node* temp = root->right;
-      delete root;
-      root = temp;
+    else if (root->left == NULL && root->right != NULL){
+      Node* temp = root;
+      root = root->right;
+      delete temp;
     }
     else{
-      if (root->right->left == NULL){
-	Node* temp = root->right->right;
-	root = root->right;
-	delete root->right;
-	root->right = temp;
+      Node* successor = root->right;
+      while(successor->left != NULL){
+	successor = successor->left;
       }
+      root->value = successor->value;
+      remove(root->right, successor->value);
     }
   }
   else{
